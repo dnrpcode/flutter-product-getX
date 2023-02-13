@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:product/app/data/providers/product_provider.dart';
 import '../../../data/models/product_model.dart';
 
 class HomeController extends GetxController {
@@ -18,16 +19,20 @@ class HomeController extends GetxController {
   void add(String name) {
     if (name != '') {
       final date = DateTime.now().toIso8601String();
-      final data = Product(id: date, name: name, createdAt: date);
-      products.add(data);
-      Get.back();
+      ProductProvider().postProduct(name, date).then((response) {
+        final data = Product(id: response['name'], name: name, createdAt: date);
+        products.add(data);
+        Get.back();
+      });
     } else {
       dialogError("Mohon masukan nama!");
     }
   }
 
   void delete(String id) {
-    products.removeWhere((e) => e.id == id);
+    ProductProvider()
+        .deleteProduct(id)
+        .then((_) => products.removeWhere((e) => e.id == id));
   }
 
   Product findById(String id) {
@@ -36,8 +41,10 @@ class HomeController extends GetxController {
 
   void edit(String id, String name) {
     final data = findById(id);
-    data.name = name;
-    products.refresh();
-    Get.back();
+    ProductProvider().editProduct(id, name).then((_) {
+      data.name = name;
+      products.refresh();
+      Get.back();
+    });
   }
 }
