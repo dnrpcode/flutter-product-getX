@@ -16,6 +16,12 @@ class HomeController extends GetxController {
     );
   }
 
+  @override
+  void onInit() {
+    getAllProduct();
+    super.onInit();
+  }
+
   void add(String name) {
     if (name != '') {
       final date = DateTime.now().toIso8601String();
@@ -33,6 +39,14 @@ class HomeController extends GetxController {
     ProductProvider()
         .deleteProduct(id)
         .then((_) => products.removeWhere((e) => e.id == id));
+  }
+
+  void getAllProduct() {
+    ProductProvider().getProduct().then((res) {
+      print('resnya nih$res');
+      // products.value = res;
+      // products.refresh();
+    });
   }
 
   Product findById(String id) {

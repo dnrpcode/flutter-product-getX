@@ -8,6 +8,12 @@ class ProductProvider extends GetConnect {
   String url =
       'https://product-565e4-default-rtdb.asia-southeast1.firebasedatabase.app/';
 
+  Future<dynamic> getProduct() async {
+    final response = await get(url + 'products/.json');
+    print("ini data all ${response.body}");
+    return response.body;
+  }
+
   Future<void> editProduct(String id, String name) async {
     final response = await patch(url + 'products/$id.json', {"name": name});
     return response.body;
